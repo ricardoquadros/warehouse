@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ps="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+	<link rel="stylesheet" href="#{facesContext.externalContext.request.contextPath}/assets/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="#{facesContext.externalContext.request.contextPath}/assets/css/style.css" />
+	<link rel="stylesheet" href="#{facesContext.externalContext.request.contextPath}/assets/css/bootstrap-theme.min.css" />
+	<script src="#{facesContext.externalContext.request.contextPath}/assets/js/jquery-2.1.4.min.js" />
+	<script src="#{facesContext.externalContext.request.contextPath}/assets/js/bootstrap.min.js" />
+</h:head>
+
+<h:body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-20 col-md-12">
+
+			<h:panelGrid columns="3">
+			<h:form>
+				<h:inputText value="#{itemInventoryBean.itemSearch}" styleClass="form-control" id="itemSearch" size="50"/>
+				<h:commandButton action="#{itemInventoryBean.search(itemInventoryBean.itemSearch)}" styleClass="btn btn-success" value="Search" />
+			</h:form>
+			</h:panelGrid>
+
+<!-- pagination still not working, not showing pages and buttons -->
+				<h:dataTable styleClass="table table-striped table-bordered"
+				var="item"
+				value="#{itemInventoryBean.itemViewList}"
+                paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                rowsPerPageTemplate="5,10,15"
+                paginator="true"
+                rows="200"
+                lazy="true"
+				paginatorAlwaysVisible="true" 
+				paginatorPosition="bottom" 
+				emptyMessage="No data found." 
+					>
+
+					<h:column>
+						<f:facet name="header">ID</f:facet>
+						<h:outputText value="#{item.idItem}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Bar Code</f:facet>
+						<h:outputText value="#{item.barCode}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Item Name</f:facet>
+						<h:outputText value="#{item.itemName}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Units</f:facet>
+						<h:outputText value="#{item.perBox}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">QTY</f:facet>
+						<h:outputText value="#{item.qty}" />
+					</h:column>
+<!-- 
+					<h:column>
+						<f:facet name="header">Action</f:facet>
+						<h:form>
+							<h:commandLink action="#{itemInventoryBean.deleteItem(item.idItem)}" styleClass="btn btn-danger">
+								<span class="glyphicon glyphicon-trash" />
+							</h:commandLink>
+							<h:commandLink
+								action="#{itemInventoryBean.loadItemForUpdate(item.idItem)}" styleClass="btn btn-primary">
+								<span class="glyphicon glyphicon-pencil" />
+							</h:commandLink>
+						</h:form>
+					</h:column>
+-->
+				</h:dataTable>
+			</div>
+		</div>
+	</div>
+
+	<h:form id="formUpdate">
+		<div id="myModal" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content modal-align">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Edit Item</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group form-input">
+							<h:outputLabel value="Description" for="description" />
+							<h:inputText styleClass="form-control" id="description" value="#{itemInventoryBean.description}" />
+						</div>
+						<div class="form-group form-input">
+							<h:outputLabel value="Color" for="color" />
+							<h:inputText styleClass="form-control" id="color" value="#{itemBean.color}" />
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+						<h:commandButton action="#{itemInventoryBean.updateItem(itemInventoryBean.idItem)}" styleClass="btn btn-success" value="Save changes" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</h:form>
+
+	<script>
+		function showModal() {
+			$("#myModal").modal('show')
+		}
+	</script>
+
+</h:body>
+
+</html>
