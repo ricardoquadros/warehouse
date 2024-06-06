@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.sql.Date;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Users {
 
     private Integer id; //          int(11) NOT NULL AUTO_INCREMENT,
@@ -26,6 +28,15 @@ public class Users {
     private Date createdAt; //  datetime(6) DEFAULT NULL,
     private Date updatedAt; //  datetime(6) DEFAULT NULL,
     private Integer updUsrId; //  int(11) DEFAULT 0,
+
+    public Users() {
+    }
+
+    public Users(Integer id, String email, String userName) {
+        this.id = id;
+        this.email = email;
+        this.userName = userName;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

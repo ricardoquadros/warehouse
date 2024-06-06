@@ -30,7 +30,7 @@ public class UsersController {
 
     @GetMapping("/getAllUsers")
     public ResponseEntity<List<Users>> listAllUsers() {
-        List<Users> userList = usersService.listAllUsers();
+        List<Users> userList = usersService.getAllUsers();
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
@@ -44,12 +44,12 @@ public class UsersController {
         return usersService.getUserByEmail(email);
     }
 
-    @PostMapping
+    @PostMapping("/saveUser")
     public Users saveUser(@RequestBody Users user) {
         return usersService.saveUser(user);
     }
 
-    @PutMapping
+    @PutMapping("/updateUser")
     public Users updateUser(@RequestBody Users user) {
         return usersService.updateUser(user);
     }
