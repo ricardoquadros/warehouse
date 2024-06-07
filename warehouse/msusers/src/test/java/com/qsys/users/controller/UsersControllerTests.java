@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qsys.users.entity.Users;
 import com.qsys.users.service.UsersService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -46,7 +48,7 @@ class UsersControllerTests {
 
         String resultContent = result.getResponse().getContentAsString();
 
-        List<Users> responseUsers = objectMapper.readValue(resultContent, new TypeReference<List<Users>>() {});
+        List<Users> responseUsers = objectMapper.readValue(resultContent, new TypeReference<>() {});
 
         assertEquals(users, responseUsers);
     }
@@ -60,22 +62,26 @@ class UsersControllerTests {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Users responseUser = objectMapper.readValue((JsonParser) result.getModelAndView().getModel(), Users.class);
+        String resultContent = result.getResponse().getContentAsString();
+
+        Users responseUser = objectMapper.readValue(resultContent, new TypeReference<>() {});
         assertEquals(user, responseUser);
     }
 
     @Test
     void testCreateUser() throws Exception {
-        Users user = new Users(1, "John", "john@example.com");
+        Users user = new Users(2, "John", "john@example.com");
         when(userService.saveUser(user)).thenReturn(user);
 
-        MvcResult result = mockMvc.perform(post("/api/v1/users")
+        MvcResult result = mockMvc.perform(post("/api/v1/users/saveUser")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andReturn();
 
-        Users responseUser = objectMapper.readValue((JsonParser) result.getModelAndView().getModel(), Users.class);
+        String resultContent = result.getResponse().getContentAsString();
+
+        Users responseUser = objectMapper.readValue(resultContent, new TypeReference<>() {});
         assertEquals(user, responseUser);
     }
 
@@ -84,13 +90,15 @@ class UsersControllerTests {
         Users user = new Users(1, "John", "john@example.com");
         when(userService.updateUser(user)).thenReturn(user);
 
-        MvcResult result = mockMvc.perform(put("/api/v1/users/1")
+        MvcResult result = mockMvc.perform(put("/api/v1/users/updateUser")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Users responseUser = objectMapper.readValue((JsonParser) result.getModelAndView().getModel(), Users.class);
+        String resultContent = result.getResponse().getContentAsString();
+
+        Users responseUser = objectMapper.readValue(resultContent, new TypeReference<>() {});
         assertEquals(user, responseUser);
     }
 
@@ -98,10 +106,12 @@ class UsersControllerTests {
     void testDeleteUser() throws Exception {
         doNothing().when(userService).deleteUserById(1);
 
-        MvcResult result = mockMvc.perform(delete("/api/v1/users/1"))
-                .andExpect(status().isNoContent())
+        MvcResult result = mockMvc.perform(delete("/api/v1/users/deleteUserById/1"))
+                .andExpect(status().isOk())
                 .andReturn();
 
-        System.out.println(result);
+        String resultContent = result.getResponse().getContentAsString();
+
+        assertTrue(resultContent.isEmpty());
     }
 }
